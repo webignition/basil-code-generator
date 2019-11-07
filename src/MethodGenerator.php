@@ -7,17 +7,17 @@ use webignition\BasilCompilationSource\LineList;
 
 class MethodGenerator
 {
-    private $lineGenerator;
+    private $lineListGenerator;
 
-    public function __construct(LineGenerator $lineGenerator)
+    public function __construct(LineListGenerator $lineListGenerator)
     {
-        $this->lineGenerator = $lineGenerator;
+        $this->lineListGenerator = $lineListGenerator;
     }
 
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
-            LineGenerator::create()
+            LineListGenerator::create()
         );
     }
 
@@ -40,7 +40,11 @@ class MethodGenerator
 }
 EOD;
         $signature = $this->createSignature($methodDefinition);
-        $lines = $this->createCodeLines(new LineList($methodDefinition->getSources()), $variableIdentifiers);
+        $lines = $this->lineListGenerator->createFromLineList(
+            new LineList($methodDefinition->getSources()),
+            $variableIdentifiers
+        );
+
         $lines = $this->indent($lines);
 
         return sprintf(
@@ -79,25 +83,6 @@ EOD;
         });
 
         return implode(', ', $arguments);
-    }
-
-    /**
-     * @param LineList $lineList
-     * @param array $variableIdentifiers
-     *
-     * @return array
-     *
-     * @throws UnresolvedPlaceholderException
-     */
-    private function createCodeLines(LineList $lineList, array $variableIdentifiers): array
-    {
-        $lines = [];
-
-        foreach ($lineList->getLines() as $line) {
-            $lines[] = $this->lineGenerator->createFromLineObject($line, $variableIdentifiers);
-        }
-
-        return $lines;
     }
 
     private function indent(array $lines): array
