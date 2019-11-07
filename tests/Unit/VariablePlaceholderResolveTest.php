@@ -57,18 +57,49 @@ class VariablePlaceholderResolveTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testResolveThrowsUnresolvedPlaceholderException()
-    {
+    /**
+     * @dataProvider resolveThrowsUnresolvedPlaceholderExceptionDataProvider
+     */
+    public function testResolveThrowsUnresolvedPlaceholderException(
+        string $content,
+        array $variableIdentifiers,
+        string $expectedPlaceholder
+    ) {
         try {
-            $this->variablePlaceholderResolver->resolve('Content with {{ PLACEHOLDER }}', []);
+            $this->variablePlaceholderResolver->resolve($content, $variableIdentifiers);
         } catch (UnresolvedPlaceholderException $unresolvedPlaceholderException) {
-            $this->assertSame(
-                'Unresolved placeholder "PLACEHOLDER" in content "Content with {{ PLACEHOLDER }}"',
-                $unresolvedPlaceholderException->getMessage()
-            );
-
-            $this->assertSame('PLACEHOLDER', $unresolvedPlaceholderException->getPlaceholder());
-            $this->assertSame('Content with {{ PLACEHOLDER }}', $unresolvedPlaceholderException->getContent());
+            $this->assertSame($expectedPlaceholder, $unresolvedPlaceholderException->getPlaceholder());
+            $this->assertSame($content, $unresolvedPlaceholderException->getContent());
         }
+    }
+
+    public function resolveThrowsUnresolvedPlaceholderExceptionDataProvider(): array
+    {
+        return [
+            'single placeholder' => [
+                'content' => 'Content with {{ PLACEHOLDER }}',
+                'variableIdentifiers' => [],
+                'expectedPlaceholder' => 'PLACEHOLDER',
+            ],
+            'two placeholders, both missing' => [
+                'content' => 'Content with {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }}',
+                'variableIdentifiers' => [],
+                'expectedPlaceholder' => 'PLACEHOLDER1',
+            ],
+            'two placeholders, first missing' => [
+                'content' => 'Content with {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }}',
+                'variableIdentifiers' => [
+                    'PLACEHOLDER2' => '$y',
+                ],
+                'expectedPlaceholder' => 'PLACEHOLDER1',
+            ],
+            'two placeholders, second missing' => [
+                'content' => 'Content with {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }}',
+                'variableIdentifiers' => [
+                    'PLACEHOLDER1' => '$x',
+                ],
+                'expectedPlaceholder' => 'PLACEHOLDER2',
+            ],
+        ];
     }
 }
