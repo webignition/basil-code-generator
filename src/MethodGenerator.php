@@ -8,16 +8,19 @@ use webignition\BasilCompilationSource\LineList;
 class MethodGenerator
 {
     private $lineListGenerator;
+    private $indenter;
 
-    public function __construct(LineListGenerator $lineListGenerator)
+    public function __construct(LineListGenerator $lineListGenerator, Indenter $indenter)
     {
         $this->lineListGenerator = $lineListGenerator;
+        $this->indenter = $indenter;
     }
 
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
-            LineListGenerator::create()
+            LineListGenerator::create(),
+            new Indenter()
         );
     }
 
@@ -45,7 +48,7 @@ EOD;
             $variableIdentifiers
         );
 
-        $lines = $this->indent($lines);
+        $lines = $this->indenter->indentLines($lines);
 
         return sprintf(
             $methodTemplate,
@@ -83,18 +86,5 @@ EOD;
         });
 
         return implode(', ', $arguments);
-    }
-
-    private function indent(array $lines): array
-    {
-        return array_map(function ($line) {
-            $line = '    ' . $line;
-
-            if ('' === trim($line)) {
-                $line = '';
-            }
-
-            return $line;
-        }, $lines);
     }
 }
