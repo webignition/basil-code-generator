@@ -3,8 +3,6 @@
 namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\LineListInterface;
-use webignition\BasilCompilationSource\MethodDefinitionInterface;
-use webignition\BasilCompilationSource\LineList;
 
 class LineListGenerator
 {
