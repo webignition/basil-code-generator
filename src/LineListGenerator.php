@@ -28,7 +28,7 @@ class LineListGenerator
      *
      * @throws UnresolvedPlaceholderException
      */
-    public function createFromLineList(LineListInterface $lineList, array $variableIdentifiers): array
+    public function createFromLineList(LineListInterface $lineList, array $variableIdentifiers = []): array
     {
         $lines = [];
 
