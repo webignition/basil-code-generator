@@ -7,21 +7,19 @@ use webignition\BasilCompilationSource\LineListInterface;
 class CodeBlockGenerator
 {
     private $useStatementFactory;
-    private $lineListGenerator;
+    private $lineGenerator;
 
-    public function __construct(
-        UseStatementFactory $useStatementFactory,
-        LineListGenerator $lineListGenerator
-    ) {
+    public function __construct(UseStatementFactory $useStatementFactory, LineGenerator $lineGenerator)
+    {
         $this->useStatementFactory = $useStatementFactory;
-        $this->lineListGenerator = $lineListGenerator;
+        $this->lineGenerator = $lineGenerator;
     }
 
     public static function create(): CodeBlockGenerator
     {
         return new CodeBlockGenerator(
             new UseStatementFactory(),
-            LineListGenerator::create()
+            LineGenerator::create()
         );
     }
 
@@ -35,7 +33,11 @@ class CodeBlockGenerator
      */
     public function createFromLineList(LineListInterface $lineList, array $variableIdentifiers = []): string
     {
-        $lines = $this->lineListGenerator->createFromLineList($lineList, $variableIdentifiers);
+        $lines = [];
+
+        foreach ($lineList->getLines() as $line) {
+            $lines[] = $this->lineGenerator->createFromLineObject($line, $variableIdentifiers);
+        }
 
         return implode("\n", $lines);
     }
