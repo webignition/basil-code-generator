@@ -3,23 +3,22 @@
 namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\MethodDefinitionInterface;
-use webignition\BasilCompilationSource\LineList;
 
 class MethodGenerator
 {
-    private $lineListGenerator;
+    private $codeBlockGenerator;
     private $indenter;
 
-    public function __construct(LineListGenerator $lineListGenerator, Indenter $indenter)
+    public function __construct(CodeBlockGenerator $codeBlockGenerator, Indenter $indenter)
     {
-        $this->lineListGenerator = $lineListGenerator;
+        $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
     }
 
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
-            LineListGenerator::create(),
+            CodeBlockGenerator::create(),
             new Indenter()
         );
     }
@@ -43,18 +42,11 @@ class MethodGenerator
 }
 EOD;
         $signature = $this->createSignature($methodDefinition);
-        $lines = $this->lineListGenerator->createFromLineList(
-            new LineList($methodDefinition->getSources()),
-            $variableIdentifiers
-        );
 
-        $lines = $this->indenter->indentLines($lines);
+        $lines = $this->codeBlockGenerator->createFromLineList($methodDefinition, $variableIdentifiers);
+        $lines = $this->indenter->indentContent($lines);
 
-        return sprintf(
-            $methodTemplate,
-            $signature,
-            implode("\n", $lines)
-        );
+        return sprintf($methodTemplate, $signature, $lines);
     }
 
     private function createSignature(MethodDefinitionInterface $methodDefinition): string
