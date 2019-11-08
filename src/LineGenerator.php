@@ -2,6 +2,7 @@
 
 namespace webignition\BasilCodeGenerator;
 
+use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\Comment;
 use webignition\BasilCompilationSource\LineInterface;
 use webignition\BasilCompilationSource\Statement;
@@ -39,6 +40,10 @@ class LineGenerator
 
     private function createLine(LineInterface $line): string
     {
+        if ($line instanceof ClassDependency) {
+            $line = new Statement(sprintf('use %s', (string) $line));
+        }
+
         if ($line instanceof Comment) {
             return '// ' . $line->getContent();
         }

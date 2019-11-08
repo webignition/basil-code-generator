@@ -8,6 +8,7 @@ namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\LineGenerator;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
+use webignition\BasilCompilationSource\ClassDependency;
 use webignition\BasilCompilationSource\Comment;
 use webignition\BasilCompilationSource\EmptyLine;
 use webignition\BasilCompilationSource\LineInterface;
@@ -69,6 +70,11 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
                     'PLACEHOLDER2' => '$y',
                 ],
                 'expectedLine' => '$x = $y;',
+            ],
+            'use statement' => [
+                'line' => new ClassDependency(ClassDependency::class),
+                'variableIdentifiers' => [],
+                'expectedLine' => 'use webignition\BasilCompilationSource\ClassDependency;',
             ],
         ];
     }
