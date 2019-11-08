@@ -3,8 +3,6 @@
 namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\ClassDefinitionInterface;
-use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\LineList;
 
 class ClassGenerator
 {
@@ -12,18 +10,18 @@ class ClassGenerator
 
     private $classDependencyHandler;
     private $methodGenerator;
-    private $lineListGenerator;
+    private $codeBlockGenerator;
     private $indenter;
 
     public function __construct(
         UseStatementFactory $classDependencyHandler,
         MethodGenerator $methodGenerator,
-        LineListGenerator $lineListGenerator,
+        CodeBlockGenerator $codeBlockGenerator,
         Indenter $indenter
     ) {
         $this->classDependencyHandler = $classDependencyHandler;
         $this->methodGenerator = $methodGenerator;
-        $this->lineListGenerator = $lineListGenerator;
+        $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
     }
 
@@ -32,7 +30,7 @@ class ClassGenerator
         return new ClassGenerator(
             new UseStatementFactory(),
             MethodGenerator::create(),
-            LineListGenerator::create(),
+            CodeBlockGenerator::create(),
             new Indenter()
         );
     }
@@ -51,11 +49,11 @@ class ClassGenerator
         string $baseClass = null,
         array $variableIdentifiers = []
     ) {
-        $useStatementCode = $this->createUseStatementCode($classDefinition->getMetadata()->getClassDependencies());
+        $classDependencies = $classDefinition->getMetadata()->getClassDependencies();
+        $useStatements = $this->codeBlockGenerator->createWithUseStatementsFromLineList($classDependencies);
+
         $signature = $this->createClassSignatureLine($classDefinition->getName(), $baseClass);
         $body = $this->createClassBody($classDefinition->getMethods(), $variableIdentifiers);
-
-
 
         $classTemplate = <<<'EOD'
 %s
@@ -66,30 +64,7 @@ class ClassGenerator
 }
 EOD;
 
-        return trim(sprintf(
-            $classTemplate,
-            $useStatementCode,
-            $signature,
-            $body
-        ));
-    }
-
-    /**
-     * @param ClassDependencyCollection $classDependencies
-     *
-     * @return string
-     *
-     * @throws UnresolvedPlaceholderException
-     */
-    private function createUseStatementCode(ClassDependencyCollection $classDependencies): string
-    {
-        $useStatements = new LineList();
-
-        foreach ($classDependencies as $classDependency) {
-            $useStatements->addLinesFromSource($this->classDependencyHandler->createSource($classDependency));
-        }
-
-        return implode("\n", $this->lineListGenerator->createFromLineList($useStatements, []));
+        return trim(sprintf($classTemplate, $useStatements, $signature, $body));
     }
 
     private function createClassSignatureLine(string $className, ?string $baseClass)
