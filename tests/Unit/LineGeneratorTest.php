@@ -6,11 +6,11 @@ namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\LineGenerator;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
-use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\Comment;
-use webignition\BasilCompilationSource\EmptyLine;
-use webignition\BasilCompilationSource\LineInterface;
-use webignition\BasilCompilationSource\Statement;
+use webignition\BasilCompilationSource\Line\ClassDependency;
+use webignition\BasilCompilationSource\Line\Comment;
+use webignition\BasilCompilationSource\Line\EmptyLine;
+use webignition\BasilCompilationSource\Line\LineInterface;
+use webignition\BasilCompilationSource\Line\Statement;
 
 class LineGeneratorTest extends \PHPUnit\Framework\TestCase
 {
@@ -72,7 +72,7 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
             'use statement' => [
                 'line' => new ClassDependency(ClassDependency::class),
                 'variableIdentifiers' => [],
-                'expectedLine' => 'use webignition\BasilCompilationSource\ClassDependency;',
+                'expectedLine' => 'use webignition\BasilCompilationSource\Line\ClassDependency;',
             ],
         ];
     }

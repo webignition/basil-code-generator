@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
-use webignition\BasilCodeGenerator\CodeBlockGenerator;
-use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\Comment;
-use webignition\BasilCompilationSource\EmptyLine;
-use webignition\BasilCompilationSource\LineList;
-use webignition\BasilCompilationSource\LineListInterface;
-use webignition\BasilCompilationSource\Metadata;
-use webignition\BasilCompilationSource\Statement;
+use webignition\BasilCodeGenerator\BlockGenerator;
+use webignition\BasilCompilationSource\Block\Block;
+use webignition\BasilCompilationSource\Block\BlockInterface;
+use webignition\BasilCompilationSource\Block\ClassDependencyCollection;
+use webignition\BasilCompilationSource\Line\ClassDependency;
+use webignition\BasilCompilationSource\Line\Comment;
+use webignition\BasilCompilationSource\Line\EmptyLine;
+use webignition\BasilCompilationSource\Line\Statement;
+use webignition\BasilCompilationSource\Metadata\Metadata;
 
-class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
+class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var CodeBlockGenerator
+     * @var BlockGenerator
      */
     private $codeBlockGenerator;
 
@@ -25,28 +25,28 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->codeBlockGenerator = CodeBlockGenerator::create();
+        $this->codeBlockGenerator = BlockGenerator::create();
     }
 
     /**
-     * @dataProvider createFromLineListDataProvider
+     * @dataProvider createFromBlockDataProvider
      */
-    public function testCreateFromLineList(
-        LineListInterface $lineList,
+    public function testCreateFromBlock(
+        BlockInterface $block,
         array $variableIdentifiers,
         string $expectedCode
     ) {
-        $code = $this->codeBlockGenerator->createFromLineList($lineList, $variableIdentifiers);
+        $code = $this->codeBlockGenerator->createFromBlock($block, $variableIdentifiers);
 
         $this->assertTrue(true);
         $this->assertEquals($expectedCode, $code);
     }
 
-    public function createFromLineListDataProvider(): array
+    public function createFromBlockDataProvider(): array
     {
         return [
             'no variable identifiers' => [
-                'lineList' => new LineList([
+                'block' => new Block([
                     new Comment('Add x and y and then return'),
                     new Statement('$z = $x + $y'),
                     new EmptyLine(),
@@ -60,7 +60,7 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
                     'return $z;'
             ],
             'has variable identifiers' => [
-                'lineList' => new LineList([
+                'block' => new Block([
                     new Comment('Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return'),
                     new Statement('$z = {{ PLACEHOLDER1 }} + {{ PLACEHOLDER2 }}'),
                     new EmptyLine(),
@@ -83,11 +83,11 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
      * @dataProvider createWithUseStatementsFromLineListDataProvider
      */
     public function testCreateWithUseStatementsFromLineList(
-        LineListInterface $lineList,
+        BlockInterface $block,
         array $variableIdentifiers,
         string $expectedCode
     ) {
-        $code = $this->codeBlockGenerator->createWithUseStatementsFromLineList($lineList, $variableIdentifiers);
+        $code = $this->codeBlockGenerator->createWithUseStatementsFromBlock($block, $variableIdentifiers);
 
         $this->assertTrue(true);
         $this->assertEquals($expectedCode, $code);
@@ -97,17 +97,17 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'no use statements' => [
-                'lineList' => new LineList([
+                'block' => new Block([
                     new Statement('$statement = new Statement("one")'),
-                    new Statement('$lineList = new LineList([$statement])'),
+                    new Statement('$block = new Block([$statement])'),
                 ]),
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     '$statement = new Statement("one");' . "\n" .
-                    '$lineList = new LineList([$statement]);'
+                    '$block = new Block([$statement]);'
             ],
             'has use statements' => [
-                'lineList' => new LineList([
+                'block' => new Block([
                     new Statement(
                         '$statement = new Statement("one")',
                         (new Metadata())
@@ -116,20 +116,20 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
                             ]))
                     ),
                     new Statement(
-                        '$lineList = new LineList([$statement])',
+                        '$block = new Block([$statement])',
                         (new Metadata())
                             ->withClassDependencies(new ClassDependencyCollection([
-                                new ClassDependency(LineList::class),
+                                new ClassDependency(Block::class),
                             ]))
                     ),
                 ]),
                 'variableIdentifiers' => [],
                 'expectedCode' =>
-                    'use webignition\BasilCompilationSource\Statement;' . "\n" .
-                    'use webignition\BasilCompilationSource\LineList;' . "\n" .
+                    'use webignition\BasilCompilationSource\Line\Statement;' . "\n" .
+                    'use webignition\BasilCompilationSource\Block\Block;' . "\n" .
                     '' . "\n" .
                     '$statement = new Statement("one");' . "\n" .
-                    '$lineList = new LineList([$statement]);'
+                    '$block = new Block([$statement]);'
             ],
         ];
     }

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\ClassGenerator;
-use webignition\BasilCompilationSource\ClassDefinition;
-use webignition\BasilCompilationSource\ClassDefinitionInterface;
-use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\ClassDependencyCollection;
-use webignition\BasilCompilationSource\Comment;
-use webignition\BasilCompilationSource\LineList;
-use webignition\BasilCompilationSource\Metadata;
-use webignition\BasilCompilationSource\MethodDefinition;
-use webignition\BasilCompilationSource\Statement;
+use webignition\BasilCompilationSource\Block\Block;
+use webignition\BasilCompilationSource\Block\ClassDependencyCollection;
+use webignition\BasilCompilationSource\ClassDefinition\ClassDefinition;
+use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
+use webignition\BasilCompilationSource\Line\ClassDependency;
+use webignition\BasilCompilationSource\Line\Comment;
+use webignition\BasilCompilationSource\Line\Statement;
+use webignition\BasilCompilationSource\Metadata\Metadata;
+use webignition\BasilCompilationSource\MethodDefinition\MethodDefinition;
 
 class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
 {
@@ -67,7 +67,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
             ],
             'single method' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', [
-                    new MethodDefinition('methodName', new LineList())
+                    new MethodDefinition('methodName', new Block())
                 ]),
                 'baseClass' => null,
                 'variableIdentifiers' => [],
@@ -81,7 +81,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
             ],
             'many methods' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', [
-                    new MethodDefinition('init', new LineList([
+                    new MethodDefinition('init', new Block([
                         new Comment('initialize'),
                         new Statement(
                             '$this->widget = new Widget()',
@@ -93,7 +93,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
                     ])),
                     new MethodDefinition(
                         'run',
-                        new LineList([
+                        new Block([
                             new Statement('$this->widget->go($x)')
                         ]),
                         ['x']

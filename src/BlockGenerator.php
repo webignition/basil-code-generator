@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
-use webignition\BasilCompilationSource\LineListInterface;
+use webignition\BasilCompilationSource\Block\BlockInterface;
 
-class CodeBlockGenerator
+class BlockGenerator
 {
     private $lineGenerator;
 
@@ -15,26 +15,26 @@ class CodeBlockGenerator
         $this->lineGenerator = $lineGenerator;
     }
 
-    public static function create(): CodeBlockGenerator
+    public static function create(): BlockGenerator
     {
-        return new CodeBlockGenerator(
+        return new BlockGenerator(
             LineGenerator::create()
         );
     }
 
     /**
-     * @param LineListInterface $lineList
+     * @param BlockInterface $block
      * @param array $variableIdentifiers
      *
      * @return string
      *
      * @throws UnresolvedPlaceholderException
      */
-    public function createFromLineList(LineListInterface $lineList, array $variableIdentifiers = []): string
+    public function createFromBlock(BlockInterface $block, array $variableIdentifiers = []): string
     {
         $lines = [];
 
-        foreach ($lineList->getLines() as $line) {
+        foreach ($block->getLines() as $line) {
             $lines[] = $this->lineGenerator->createFromLineObject($line, $variableIdentifiers);
         }
 
@@ -42,23 +42,23 @@ class CodeBlockGenerator
     }
 
     /**
-     * @param LineListInterface $lineList
+     * @param BlockInterface $block
      * @param array $variableIdentifiers
      *
      * @return string
      *
      * @throws UnresolvedPlaceholderException
      */
-    public function createWithUseStatementsFromLineList(
-        LineListInterface $lineList,
+    public function createWithUseStatementsFromBlock(
+        BlockInterface $block,
         array $variableIdentifiers = []
     ): string {
-        $code = $this->createFromLineList($lineList->getMetadata()->getClassDependencies());
+        $code = $this->createFromBlock($block->getMetadata()->getClassDependencies());
 
         if ('' !== $code) {
             $code .= "\n\n";
         }
 
-        return $code . $this->createFromLineList($lineList, $variableIdentifiers);
+        return $code . $this->createFromBlock($block, $variableIdentifiers);
     }
 }
