@@ -8,23 +8,23 @@ class Indenter
 {
     private const LINE_DELIMITER = "\n";
 
-    public function indentLines(array $lines, int $spaceCount = 4): array
+    public function indent(string $content, int $spaceCount = 4): string
     {
-        return array_map(function ($line) use ($spaceCount) {
-            if ('' === $line) {
-                return '';
-            }
+        $lines = explode(self::LINE_DELIMITER, $content);
 
-            $indentation = str_repeat(' ', $spaceCount);
+        $indentedLines = array_map(
+            function ($line) use ($spaceCount) {
+                if ('' === $line) {
+                    return '';
+                }
 
-            return $indentation . $line;
-        }, $lines);
-    }
+                $indentation = str_repeat(' ', $spaceCount);
 
-    public function indentContent(string $content, int $spaceCount = 4): string
-    {
-        $lines = $this->indentLines(explode(self::LINE_DELIMITER, $content), $spaceCount);
+                return $indentation . $line;
+            },
+            $lines
+        );
 
-        return implode(self::LINE_DELIMITER, $lines);
+        return implode(self::LINE_DELIMITER, $indentedLines);
     }
 }
