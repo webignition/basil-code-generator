@@ -1,10 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
 class Indenter
 {
-    const LINE_DELIMITER = "\n";
+    private const LINE_DELIMITER = "\n";
 
     public function indentLines(array $lines, int $spaceCount = 4): array
     {
