@@ -6,19 +6,16 @@ use webignition\BasilCompilationSource\LineListInterface;
 
 class CodeBlockGenerator
 {
-    private $useStatementFactory;
     private $lineGenerator;
 
-    public function __construct(UseStatementFactory $useStatementFactory, LineGenerator $lineGenerator)
+    public function __construct(LineGenerator $lineGenerator)
     {
-        $this->useStatementFactory = $useStatementFactory;
         $this->lineGenerator = $lineGenerator;
     }
 
     public static function create(): CodeBlockGenerator
     {
         return new CodeBlockGenerator(
-            new UseStatementFactory(),
             LineGenerator::create()
         );
     }
