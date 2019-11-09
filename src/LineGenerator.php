@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
-use webignition\BasilCompilationSource\ClassDependency;
-use webignition\BasilCompilationSource\Comment;
-use webignition\BasilCompilationSource\LineInterface;
-use webignition\BasilCompilationSource\Statement;
+use webignition\BasilCompilationSource\Line\ClassDependency;
+use webignition\BasilCompilationSource\Line\Comment;
+use webignition\BasilCompilationSource\Line\LineInterface;
+use webignition\BasilCompilationSource\Line\Statement;
 
 class LineGenerator
 {

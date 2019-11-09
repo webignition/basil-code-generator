@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
-use webignition\BasilCompilationSource\MethodDefinitionInterface;
+use webignition\BasilCompilationSource\MethodDefinition\MethodDefinitionInterface;
 
 class MethodGenerator
 {
     private $codeBlockGenerator;
     private $indenter;
 
-    public function __construct(CodeBlockGenerator $codeBlockGenerator, Indenter $indenter)
+    public function __construct(BlockGenerator $codeBlockGenerator, Indenter $indenter)
     {
         $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
@@ -20,7 +20,7 @@ class MethodGenerator
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
-            CodeBlockGenerator::create(),
+            BlockGenerator::create(),
             new Indenter()
         );
     }
@@ -45,7 +45,7 @@ class MethodGenerator
 EOD;
         $signature = $this->createSignature($methodDefinition);
 
-        $lines = $this->codeBlockGenerator->createFromLineList($methodDefinition, $variableIdentifiers);
+        $lines = $this->codeBlockGenerator->createFromBlock($methodDefinition, $variableIdentifiers);
         $lines = $this->indenter->indent($lines);
 
         return sprintf($methodTemplate, $signature, $lines);

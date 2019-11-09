@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\MethodGenerator;
-use webignition\BasilCompilationSource\Comment;
-use webignition\BasilCompilationSource\EmptyLine;
-use webignition\BasilCompilationSource\LineList;
-use webignition\BasilCompilationSource\MethodDefinition;
-use webignition\BasilCompilationSource\MethodDefinitionInterface;
-use webignition\BasilCompilationSource\Statement;
+use webignition\BasilCompilationSource\Block\Block;
+use webignition\BasilCompilationSource\Line\Comment;
+use webignition\BasilCompilationSource\Line\EmptyLine;
+use webignition\BasilCompilationSource\Line\Statement;
+use webignition\BasilCompilationSource\MethodDefinition\MethodDefinition;
+use webignition\BasilCompilationSource\MethodDefinition\MethodDefinitionInterface;
 
 class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
 {
@@ -42,21 +42,21 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
 
     public function createForClassDefinitionDataProvider(): array
     {
-        $emptyProtectedMethod = new MethodDefinition('emptyProtectedMethod', new LineList());
+        $emptyProtectedMethod = new MethodDefinition('emptyProtectedMethod', new Block());
         $emptyProtectedMethod->setProtected();
 
-        $emptyPrivateMethod = new MethodDefinition('emptyPrivateMethod', new LineList());
+        $emptyPrivateMethod = new MethodDefinition('emptyPrivateMethod', new Block());
         $emptyPrivateMethod->setPrivate();
 
-        $emptyMethodWithReturnType = new MethodDefinition('emptyPublicMethodWithReturnType', new LineList());
+        $emptyMethodWithReturnType = new MethodDefinition('emptyPublicMethodWithReturnType', new Block());
         $emptyMethodWithReturnType->setReturnType('string');
 
-        $emptyPublicStaticMethod = new MethodDefinition('emptyPublicStaticMethod', new LineList());
+        $emptyPublicStaticMethod = new MethodDefinition('emptyPublicStaticMethod', new Block());
         $emptyPublicStaticMethod->setStatic();
 
         return [
             'public, no arguments, no return type, no lines, no variable identifiers' => [
-                'methodDefinition' => new MethodDefinition('emptyPublicMethod', new LineList()),
+                'methodDefinition' => new MethodDefinition('emptyPublicMethod', new Block()),
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     'public function emptyPublicMethod()' . "\n" .
@@ -80,7 +80,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                     '}'
             ],
             'public, has arguments, no return type, no lines, no variable identifiers' => [
-                'methodDefinition' => new MethodDefinition('emptyPublicMethod', new LineList(), [
+                'methodDefinition' => new MethodDefinition('emptyPublicMethod', new Block(), [
                     'arg1',
                     'arg2',
                     'arg3',
@@ -102,7 +102,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
             'public, has arguments, no return type, has lines, no variable identifiers' => [
                 'methodDefinition' => new MethodDefinition(
                     'nameOfMethod',
-                    new LineList([
+                    new Block([
                         new Comment('Add x and y and then return'),
                         new Statement('$z = $x + $y'),
                         new EmptyLine(),
@@ -131,7 +131,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
             'public, has arguments, no return type, has lines, has variable identifiers' => [
                 'methodDefinition' => new MethodDefinition(
                     'nameOfMethod',
-                    new LineList([
+                    new Block([
                         new Comment('Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return'),
                         new Statement('$z = {{ PLACEHOLDER1 }} + {{ PLACEHOLDER2 }}'),
                         new EmptyLine(),

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
-use webignition\BasilCompilationSource\ClassDefinitionInterface;
+use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
 
 class ClassGenerator
 {
@@ -16,7 +16,7 @@ class ClassGenerator
 
     public function __construct(
         MethodGenerator $methodGenerator,
-        CodeBlockGenerator $codeBlockGenerator,
+        BlockGenerator $codeBlockGenerator,
         Indenter $indenter
     ) {
         $this->methodGenerator = $methodGenerator;
@@ -28,7 +28,7 @@ class ClassGenerator
     {
         return new ClassGenerator(
             MethodGenerator::create(),
-            CodeBlockGenerator::create(),
+            BlockGenerator::create(),
             new Indenter()
         );
     }
@@ -48,7 +48,7 @@ class ClassGenerator
         array $variableIdentifiers = []
     ) {
         $classDependencies = $classDefinition->getMetadata()->getClassDependencies();
-        $useStatements = $this->codeBlockGenerator->createWithUseStatementsFromLineList($classDependencies);
+        $useStatements = $this->codeBlockGenerator->createWithUseStatementsFromBlock($classDependencies);
 
         $signature = $this->createClassSignatureLine($classDefinition->getName(), $baseClass);
         $body = $this->createClassBody($classDefinition->getMethods(), $variableIdentifiers);
