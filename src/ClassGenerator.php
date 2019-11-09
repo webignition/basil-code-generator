@@ -88,7 +88,7 @@ EOD;
 
         foreach ($methods as $methodDefinition) {
             $method = $this->methodGenerator->createFromMethodDefinition($methodDefinition, $variableIdentifiers);
-            $method = $this->indenter->indentContent($method);
+            $method = $this->indenter->indent($method);
 
             $methodCode[] = $method;
         }

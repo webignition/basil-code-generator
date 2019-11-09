@@ -46,7 +46,7 @@ EOD;
         $signature = $this->createSignature($methodDefinition);
 
         $lines = $this->codeBlockGenerator->createFromLineList($methodDefinition, $variableIdentifiers);
-        $lines = $this->indenter->indentContent($lines);
+        $lines = $this->indenter->indent($lines);
 
         return sprintf($methodTemplate, $signature, $lines);
     }
