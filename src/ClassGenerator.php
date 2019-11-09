@@ -8,18 +8,15 @@ class ClassGenerator
 {
     const CLASS_SIGNATURE_TEMPLATE = 'class %s %s';
 
-    private $classDependencyHandler;
     private $methodGenerator;
     private $codeBlockGenerator;
     private $indenter;
 
     public function __construct(
-        UseStatementFactory $classDependencyHandler,
         MethodGenerator $methodGenerator,
         CodeBlockGenerator $codeBlockGenerator,
         Indenter $indenter
     ) {
-        $this->classDependencyHandler = $classDependencyHandler;
         $this->methodGenerator = $methodGenerator;
         $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
@@ -28,7 +25,6 @@ class ClassGenerator
     public static function create(): ClassGenerator
     {
         return new ClassGenerator(
-            new UseStatementFactory(),
             MethodGenerator::create(),
             CodeBlockGenerator::create(),
             new Indenter()
