@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator;
 
@@ -6,7 +8,7 @@ use webignition\BasilCompilationSource\ClassDefinitionInterface;
 
 class ClassGenerator
 {
-    const CLASS_SIGNATURE_TEMPLATE = 'class %s %s';
+    private const CLASS_SIGNATURE_TEMPLATE = 'class %s %s';
 
     private $methodGenerator;
     private $codeBlockGenerator;
