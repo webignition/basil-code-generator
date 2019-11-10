@@ -11,7 +11,7 @@ class MethodGenerator
     private $codeBlockGenerator;
     private $indenter;
 
-    public function __construct(BlockGenerator $codeBlockGenerator, Indenter $indenter)
+    public function __construct(CodeBlockGenerator $codeBlockGenerator, Indenter $indenter)
     {
         $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
@@ -20,7 +20,7 @@ class MethodGenerator
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
-            BlockGenerator::create(),
+            CodeBlockGenerator::create(),
             new Indenter()
         );
     }

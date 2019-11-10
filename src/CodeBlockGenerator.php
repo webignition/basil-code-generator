@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\Block\BlockInterface;
+use webignition\BasilCompilationSource\Block\CodeBlockInterface;
 
-class BlockGenerator
+class CodeBlockGenerator
 {
     private $lineGenerator;
 
@@ -15,9 +16,9 @@ class BlockGenerator
         $this->lineGenerator = $lineGenerator;
     }
 
-    public static function create(): BlockGenerator
+    public static function create(): CodeBlockGenerator
     {
-        return new BlockGenerator(
+        return new CodeBlockGenerator(
             LineGenerator::create()
         );
     }
@@ -53,7 +54,9 @@ class BlockGenerator
         BlockInterface $block,
         array $variableIdentifiers = []
     ): string {
-        $code = $this->createFromBlock($block->getMetadata()->getClassDependencies());
+        $code = $block instanceof CodeBlockInterface
+            ? $this->createFromBlock($block->getMetadata()->getClassDependencies())
+            : '';
 
         if ('' !== $code) {
             $code .= "\n\n";

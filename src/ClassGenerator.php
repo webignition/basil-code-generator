@@ -16,7 +16,7 @@ class ClassGenerator
 
     public function __construct(
         MethodGenerator $methodGenerator,
-        BlockGenerator $codeBlockGenerator,
+        CodeBlockGenerator $codeBlockGenerator,
         Indenter $indenter
     ) {
         $this->methodGenerator = $methodGenerator;
@@ -28,7 +28,7 @@ class ClassGenerator
     {
         return new ClassGenerator(
             MethodGenerator::create(),
-            BlockGenerator::create(),
+            CodeBlockGenerator::create(),
             new Indenter()
         );
     }
@@ -48,7 +48,7 @@ class ClassGenerator
         array $variableIdentifiers = []
     ) {
         $classDependencies = $classDefinition->getMetadata()->getClassDependencies();
-        $useStatements = $this->codeBlockGenerator->createWithUseStatementsFromBlock($classDependencies);
+        $useStatements = $this->codeBlockGenerator->createFromBlock($classDependencies);
 
         $signature = $this->createClassSignatureLine($classDefinition->getName(), $baseClass);
         $body = $this->createClassBody($classDefinition->getMethods(), $variableIdentifiers);

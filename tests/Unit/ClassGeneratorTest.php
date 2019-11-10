@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\ClassGenerator;
-use webignition\BasilCompilationSource\Block\Block;
 use webignition\BasilCompilationSource\Block\ClassDependencyCollection;
+use webignition\BasilCompilationSource\Block\CodeBlock;
 use webignition\BasilCompilationSource\ClassDefinition\ClassDefinition;
 use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
 use webignition\BasilCompilationSource\Line\ClassDependency;
@@ -67,7 +67,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
             ],
             'single method' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', [
-                    new MethodDefinition('methodName', new Block())
+                    new MethodDefinition('methodName', new CodeBlock())
                 ]),
                 'baseClass' => null,
                 'variableIdentifiers' => [],
@@ -81,7 +81,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
             ],
             'many methods' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', [
-                    new MethodDefinition('init', new Block([
+                    new MethodDefinition('init', new CodeBlock([
                         new Comment('initialize'),
                         new Statement(
                             '$this->widget = new Widget()',
@@ -93,7 +93,7 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
                     ])),
                     new MethodDefinition(
                         'run',
-                        new Block([
+                        new CodeBlock([
                             new Statement('$this->widget->go($x)')
                         ]),
                         ['x']
