@@ -10,18 +10,24 @@ class MethodGenerator
 {
     private $codeBlockGenerator;
     private $indenter;
+    private $docBlockGenerator;
 
-    public function __construct(CodeBlockGenerator $codeBlockGenerator, Indenter $indenter)
-    {
+    public function __construct(
+        CodeBlockGenerator $codeBlockGenerator,
+        Indenter $indenter,
+        DocBlockGenerator $docBlockGenerator
+    ) {
         $this->codeBlockGenerator = $codeBlockGenerator;
         $this->indenter = $indenter;
+        $this->docBlockGenerator = $docBlockGenerator;
     }
 
     public static function create(): MethodGenerator
     {
         return new MethodGenerator(
             CodeBlockGenerator::create(),
-            new Indenter()
+            new Indenter(),
+            DocBlockGenerator::create()
         );
     }
 
@@ -48,7 +54,16 @@ EOD;
         $lines = $this->codeBlockGenerator->createFromBlock($methodDefinition, $variableIdentifiers);
         $lines = $this->indenter->indent($lines);
 
-        return sprintf($methodTemplate, $signature, $lines);
+        $content = sprintf($methodTemplate, $signature, $lines);
+
+        $docBlock = $methodDefinition->getDocBlock();
+        if (count($docBlock->getLines()) > 0) {
+            $docblockContent = $this->docBlockGenerator->createFromDocBlock($docBlock);
+
+            $content = $docblockContent . "\n" . $content;
+        }
+
+        return $content;
     }
 
     private function createSignature(MethodDefinitionInterface $methodDefinition): string

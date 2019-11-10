@@ -6,6 +6,7 @@ namespace webignition\BasilCodeGenerator\Tests\Unit;
 
 use webignition\BasilCodeGenerator\MethodGenerator;
 use webignition\BasilCompilationSource\Block\CodeBlock;
+use webignition\BasilCompilationSource\Block\DocBlock;
 use webignition\BasilCompilationSource\Line\Comment;
 use webignition\BasilCompilationSource\Line\EmptyLine;
 use webignition\BasilCompilationSource\Line\Statement;
@@ -152,6 +153,47 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                     '    return $z;' . "\n" .
                     '}'
             ],
+            'public, has arguments, no return type, has lines, has variable identifiers, with docblock' => [
+                'methodDefinition' => $this->createMethodDefinitionWithDocBlock(
+                    new MethodDefinition(
+                        'nameOfMethod',
+                        new CodeBlock([
+                            new Comment('Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return'),
+                            new Statement('$z = {{ PLACEHOLDER1 }} + {{ PLACEHOLDER2 }}'),
+                            new EmptyLine(),
+                            new Statement('return $z'),
+                        ]),
+                        ['x', 'y']
+                    ),
+                    new DocBlock([
+                        new Comment('@dataProvider nameOfMethodDataProvider'),
+                    ])
+                ),
+                'variableIdentifiers' => [
+                    'PLACEHOLDER1' => '$x',
+                    'PLACEHOLDER2' => '$y',
+                ],
+                'expectedCode' =>
+                    '/**' . "\n" .
+                    ' * @dataProvider nameOfMethodDataProvider' . "\n" .
+                    ' */' . "\n" .
+                    'public function nameOfMethod($x, $y)' . "\n" .
+                    '{' . "\n" .
+                    '    // Add $x and $y and then return' . "\n" .
+                    '    $z = $x + $y;' . "\n" .
+                    '' . "\n" .
+                    '    return $z;' . "\n" .
+                    '}'
+            ],
         ];
+    }
+
+    private function createMethodDefinitionWithDocBlock(
+        MethodDefinitionInterface $methodDefinition,
+        DocBlock $docBlock
+    ): MethodDefinitionInterface {
+        $methodDefinition->setDocBlock($docBlock);
+
+        return $methodDefinition;
     }
 }
