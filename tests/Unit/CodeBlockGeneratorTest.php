@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
-use webignition\BasilCodeGenerator\BlockGenerator;
-use webignition\BasilCompilationSource\Block\Block;
+use webignition\BasilCodeGenerator\CodeBlockGenerator;
 use webignition\BasilCompilationSource\Block\BlockInterface;
 use webignition\BasilCompilationSource\Block\ClassDependencyCollection;
+use webignition\BasilCompilationSource\Block\CodeBlock;
+use webignition\BasilCompilationSource\Block\CodeBlockInterface;
 use webignition\BasilCompilationSource\Line\ClassDependency;
 use webignition\BasilCompilationSource\Line\Comment;
 use webignition\BasilCompilationSource\Line\EmptyLine;
 use webignition\BasilCompilationSource\Line\Statement;
 use webignition\BasilCompilationSource\Metadata\Metadata;
 
-class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
+class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var BlockGenerator
+     * @var CodeBlockGenerator
      */
     private $codeBlockGenerator;
 
@@ -25,14 +26,14 @@ class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->codeBlockGenerator = BlockGenerator::create();
+        $this->codeBlockGenerator = CodeBlockGenerator::create();
     }
 
     /**
      * @dataProvider createFromBlockDataProvider
      */
     public function testCreateFromBlock(
-        BlockInterface $block,
+        CodeBlockInterface $block,
         array $variableIdentifiers,
         string $expectedCode
     ) {
@@ -46,7 +47,7 @@ class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'no variable identifiers' => [
-                'block' => new Block([
+                'block' => new CodeBlock([
                     new Comment('Add x and y and then return'),
                     new Statement('$z = $x + $y'),
                     new EmptyLine(),
@@ -60,7 +61,7 @@ class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
                     'return $z;'
             ],
             'has variable identifiers' => [
-                'block' => new Block([
+                'block' => new CodeBlock([
                     new Comment('Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return'),
                     new Statement('$z = {{ PLACEHOLDER1 }} + {{ PLACEHOLDER2 }}'),
                     new EmptyLine(),
@@ -97,17 +98,17 @@ class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         return [
             'no use statements' => [
-                'block' => new Block([
+                'block' => new CodeBlock([
                     new Statement('$statement = new Statement("one")'),
-                    new Statement('$block = new Block([$statement])'),
+                    new Statement('$block = new CodeBlock([$statement])'),
                 ]),
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     '$statement = new Statement("one");' . "\n" .
-                    '$block = new Block([$statement]);'
+                    '$block = new CodeBlock([$statement]);'
             ],
             'has use statements' => [
-                'block' => new Block([
+                'block' => new CodeBlock([
                     new Statement(
                         '$statement = new Statement("one")',
                         (new Metadata())
@@ -116,20 +117,20 @@ class BlockGeneratorTest extends \PHPUnit\Framework\TestCase
                             ]))
                     ),
                     new Statement(
-                        '$block = new Block([$statement])',
+                        '$block = new CodeBlock([$statement])',
                         (new Metadata())
                             ->withClassDependencies(new ClassDependencyCollection([
-                                new ClassDependency(Block::class),
+                                new ClassDependency(CodeBlock::class),
                             ]))
                     ),
                 ]),
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     'use webignition\BasilCompilationSource\Line\Statement;' . "\n" .
-                    'use webignition\BasilCompilationSource\Block\Block;' . "\n" .
+                    'use webignition\BasilCompilationSource\Block\CodeBlock;' . "\n" .
                     '' . "\n" .
                     '$statement = new Statement("one");' . "\n" .
-                    '$block = new Block([$statement]);'
+                    '$block = new CodeBlock([$statement]);'
             ],
         ];
     }
