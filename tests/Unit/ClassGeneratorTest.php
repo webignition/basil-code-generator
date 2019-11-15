@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace webignition\BasilCodeGenerator\Tests\Unit;
 
+use PHPUnit\Framework\TestCase;
 use webignition\BasilCodeGenerator\ClassGenerator;
 use webignition\BasilCompilationSource\Block\ClassDependencyCollection;
 use webignition\BasilCompilationSource\Block\CodeBlock;
@@ -17,7 +18,7 @@ use webignition\BasilCompilationSource\Metadata\Metadata;
 use webignition\BasilCompilationSource\MethodDefinition\MethodDefinition;
 use webignition\BasilCompilationSource\MethodDefinition\MethodDefinitionInterface;
 
-class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
+class ClassGeneratorTest extends TestCase
 {
     /**
      * @var ClassGenerator
@@ -36,11 +37,15 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateForClassDefinition(
         ClassDefinitionInterface $classDefinition,
-        ?string $baseClass,
+        string $fullyQualifiedBaseClass,
         array $variableIdentifiers,
         string $expectedCode
     ) {
-        $code = $this->classGenerator->createForClassDefinition($classDefinition, $baseClass, $variableIdentifiers);
+        $code = $this->classGenerator->createForClassDefinition(
+            $classDefinition,
+            $fullyQualifiedBaseClass,
+            $variableIdentifiers
+        );
 
         $this->assertTrue(true);
         $this->assertEquals($expectedCode, $code);
@@ -49,21 +54,23 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
     public function createForClassDefinitionDataProvider(): array
     {
         return [
-            'no methods, no base class' => [
+            'no methods, base class in root namespace' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', []),
-                'baseClass' => null,
+                'fullyQualifiedBaseClass' => 'TestCase',
                 'variableIdentifiers' => [],
                 'expectedCode' =>
-                    'class NameOfClass' . "\n" .
+                    'class NameOfClass extends TestCase' . "\n" .
                     '{' . "\n\n" .
                     '}'
             ],
-            'no methods, has base class' => [
+            'no methods, base class in non-root namespace' => [
                 'classDefinition' => new ClassDefinition('NameOfClass', []),
-                'baseClass' => 'BaseClass',
+                'fullyQualifiedBaseClass' => TestCase::class,
                 'variableIdentifiers' => [],
                 'expectedCode' =>
-                    'class NameOfClass extends BaseClass' . "\n" .
+                    'use PHPUnit\Framework\TestCase;' . "\n" .
+                    '' . "\n" .
+                    'class NameOfClass extends TestCase' . "\n" .
                     '{' . "\n\n" .
                     '}'
             ],
@@ -71,10 +78,10 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
                 'classDefinition' => new ClassDefinition('NameOfClass', [
                     new MethodDefinition('methodName', new CodeBlock())
                 ]),
-                'baseClass' => null,
+                'fullyQualifiedBaseClass' => 'TestCase',
                 'variableIdentifiers' => [],
                 'expectedCode' =>
-                    'class NameOfClass' . "\n" .
+                    'class NameOfClass extends TestCase' . "\n" .
                     '{' . "\n" .
                     '    public function methodName()' . "\n" .
                     '    {' . "\n\n" .
@@ -101,11 +108,11 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
                         ['x']
                     ),
                 ]),
-                'baseClass' => null,
+                'fullyQualifiedBaseClass' => 'TestCase',
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     'use Acme\Widget;' . "\n\n" .
-                    'class NameOfClass' . "\n" .
+                    'class NameOfClass extends TestCase' . "\n" .
                     '{' . "\n" .
                     '    public function init()' . "\n" .
                     '    {' . "\n" .
@@ -148,11 +155,11 @@ class ClassGeneratorTest extends \PHPUnit\Framework\TestCase
                         ])
                     ),
                 ]),
-                'baseClass' => null,
+                'fullyQualifiedBaseClass' => 'TestCase',
                 'variableIdentifiers' => [],
                 'expectedCode' =>
                     'use Acme\Widget;' . "\n\n" .
-                    'class NameOfClass' . "\n" .
+                    'class NameOfClass extends TestCase' . "\n" .
                     '{' . "\n" .
                     '    /**' . "\n" .
                     '     * initialisation' . "\n" .

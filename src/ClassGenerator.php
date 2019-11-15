@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
+use webignition\BasilCompilationSource\Line\ClassDependency;
 
 class ClassGenerator
 {
     private const CLASS_SIGNATURE_TEMPLATE = 'class %s %s';
+    private const NAMESPACE_SEPARATOR = '\\';
 
     private $methodGenerator;
     private $codeBlockGenerator;
@@ -35,7 +37,7 @@ class ClassGenerator
 
     /**
      * @param ClassDefinitionInterface $classDefinition
-     * @param string|null $baseClass
+     * @param string $fullyQualifiedBaseClass
      * @param array $variableIdentifiers
      *
      * @return string
@@ -44,10 +46,17 @@ class ClassGenerator
      */
     public function createForClassDefinition(
         ClassDefinitionInterface $classDefinition,
-        string $baseClass = null,
+        string $fullyQualifiedBaseClass,
         array $variableIdentifiers = []
     ) {
+        $baseClass = $this->createBaseClassName($fullyQualifiedBaseClass);
+        $baseClassDependency = $this->createBaseClassDependency($fullyQualifiedBaseClass);
+
         $classDependencies = $classDefinition->getMetadata()->getClassDependencies();
+        if ($baseClassDependency instanceof ClassDependency) {
+            $classDependencies->addLine($baseClassDependency);
+        }
+
         $useStatements = $this->codeBlockGenerator->createFromBlock($classDependencies);
 
         $signature = $this->createClassSignatureLine($classDefinition->getName(), $baseClass);
@@ -94,5 +103,25 @@ EOD;
         }
 
         return implode("\n\n", $methodCode);
+    }
+
+    private function createBaseClassName(string $fullyQualifiedBaseClass): string
+    {
+        $classNameParts = explode(self::NAMESPACE_SEPARATOR, $fullyQualifiedBaseClass);
+
+        if (0 === count($classNameParts)) {
+            return $fullyQualifiedBaseClass;
+        }
+
+        return array_pop($classNameParts);
+    }
+
+    private function createBaseClassDependency(string $fullyQualifiedBaseClass): ?ClassDependency
+    {
+        if (0 === substr_count($fullyQualifiedBaseClass, self::NAMESPACE_SEPARATOR)) {
+            return null;
+        }
+
+        return new ClassDependency($fullyQualifiedBaseClass);
     }
 }
