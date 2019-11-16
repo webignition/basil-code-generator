@@ -53,6 +53,7 @@ EOD;
 
         $lines = $this->codeBlockGenerator->createFromBlock($methodDefinition, $variableIdentifiers);
         $lines = $this->indenter->indent($lines);
+        $lines = rtrim($lines, "\n");
 
         $content = sprintf($methodTemplate, $signature, $lines);
 

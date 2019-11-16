@@ -121,6 +121,22 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                     '    return $z;' . "\n" .
                     '}'
             ],
+            'public, has arguments, no return type, has lines with trailing newline, no variable identifiers' => [
+                'methodDefinition' => new MethodDefinition(
+                    'nameOfMethod',
+                    new CodeBlock([
+                        new Comment('comment'),
+                        new EmptyLine(),
+                    ]),
+                    ['x', 'y']
+                ),
+                'variableIdentifiers' => [],
+                'expectedCode' =>
+                    'public function nameOfMethod($x, $y)' . "\n" .
+                    '{' . "\n" .
+                    '    // comment' . "\n" .
+                    '}'
+            ],
             'public static, no arguments, no return type, no lines, no variable identifiers' => [
                 'methodDefinition' => $emptyPublicStaticMethod,
                 'variableIdentifiers' => [],
