@@ -25,7 +25,7 @@ class CodeBlockGenerator
 
     /**
      * @param BlockInterface $block
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *
@@ -44,7 +44,7 @@ class CodeBlockGenerator
 
     /**
      * @param BlockInterface $block
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *

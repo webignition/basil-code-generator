@@ -31,6 +31,10 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createFromBlockDataProvider
+     *
+     * @param CodeBlockInterface $block
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedCode
      */
     public function testCreateFromBlock(
         CodeBlockInterface $block,
@@ -82,6 +86,10 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createWithUseStatementsFromLineListDataProvider
+     *
+     * @param BlockInterface $block
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedCode
      */
     public function testCreateWithUseStatementsFromLineList(
         BlockInterface $block,

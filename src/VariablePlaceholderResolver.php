@@ -10,7 +10,7 @@ class VariablePlaceholderResolver
 {
     /**
      * @param string $content
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *

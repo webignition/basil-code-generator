@@ -6,6 +6,7 @@ namespace webignition\BasilCodeGenerator;
 
 use webignition\BasilCompilationSource\ClassDefinition\ClassDefinitionInterface;
 use webignition\BasilCompilationSource\Line\ClassDependency;
+use webignition\BasilCompilationSource\MethodDefinition\MethodDefinitionInterface;
 
 class ClassGenerator
 {
@@ -38,7 +39,7 @@ class ClassGenerator
     /**
      * @param ClassDefinitionInterface $classDefinition
      * @param string $fullyQualifiedBaseClass
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *
@@ -74,7 +75,7 @@ EOD;
         return trim(sprintf($classTemplate, $useStatements, $signature, $body));
     }
 
-    private function createClassSignatureLine(string $className, ?string $baseClass)
+    private function createClassSignatureLine(string $className, ?string $baseClass): string
     {
         $extendsSegment = null === $baseClass
              ? ''
@@ -84,8 +85,8 @@ EOD;
     }
 
     /**
-     * @param array $methods
-     * @param array $variableIdentifiers
+     * @param array<MethodDefinitionInterface> $methods
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *

@@ -27,7 +27,7 @@ class LineGenerator
 
     /**
      * @param LineInterface $line
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *
