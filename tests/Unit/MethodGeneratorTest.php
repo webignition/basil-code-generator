@@ -29,6 +29,10 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createForClassDefinitionDataProvider
+     *
+     * @param MethodDefinitionInterface $methodDefinition
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedCode
      */
     public function testCreateFromMethodDefinition(
         MethodDefinitionInterface $methodDefinition,

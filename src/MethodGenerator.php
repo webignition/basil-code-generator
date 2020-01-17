@@ -33,7 +33,7 @@ class MethodGenerator
 
     /**
      * @param MethodDefinitionInterface $methodDefinition
-     * @param array $variableIdentifiers
+     * @param array<string, string> $variableIdentifiers
      *
      * @return string
      *
@@ -87,7 +87,12 @@ EOD;
         return $signature;
     }
 
-    private function createSignatureArguments(array $argumentNames)
+    /**
+     * @param array<string, string> $argumentNames
+     *
+     * @return string
+     */
+    private function createSignatureArguments(array $argumentNames): string
     {
         $arguments = $argumentNames;
 

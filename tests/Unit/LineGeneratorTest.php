@@ -28,6 +28,11 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider createFromLineObjectDataProvider
+     *
+     * @param LineInterface $line
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedLine
+     * @throws UnresolvedPlaceholderException
      */
     public function testCreateFromLineObject(LineInterface $line, array $variableIdentifiers, string $expectedLine)
     {

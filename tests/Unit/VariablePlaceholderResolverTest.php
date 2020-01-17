@@ -7,7 +7,7 @@ namespace webignition\BasilCodeGenerator\Tests\Unit;
 use webignition\BasilCodeGenerator\UnresolvedPlaceholderException;
 use webignition\BasilCodeGenerator\VariablePlaceholderResolver;
 
-class VariablePlaceholderResolveTest extends \PHPUnit\Framework\TestCase
+class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var VariablePlaceholderResolver
@@ -23,6 +23,11 @@ class VariablePlaceholderResolveTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider resolveDataProvider
+     *
+     * @param string $content
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedResolvedContent
+     * @throws UnresolvedPlaceholderException
      */
     public function testResolve(string $content, array $variableIdentifiers, string $expectedResolvedContent)
     {
@@ -57,6 +62,10 @@ class VariablePlaceholderResolveTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @dataProvider resolveThrowsUnresolvedPlaceholderExceptionDataProvider
+     *
+     * @param string $content
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedPlaceholder
      */
     public function testResolveThrowsUnresolvedPlaceholderException(
         string $content,

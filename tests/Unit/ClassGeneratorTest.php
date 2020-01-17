@@ -34,6 +34,11 @@ class ClassGeneratorTest extends TestCase
 
     /**
      * @dataProvider createForClassDefinitionDataProvider
+     *
+     * @param ClassDefinitionInterface $classDefinition
+     * @param string $fullyQualifiedBaseClass
+     * @param array<string, string> $variableIdentifiers
+     * @param string $expectedCode
      */
     public function testCreateForClassDefinition(
         ClassDefinitionInterface $classDefinition,
