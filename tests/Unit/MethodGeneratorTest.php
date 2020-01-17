@@ -167,7 +167,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                 'expectedCode' =>
                     'public function nameOfMethod($x, $y)' . "\n" .
                     '{' . "\n" .
-                    '    // Add $x and $y and then return' . "\n" .
+                    '    // Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return' . "\n" .
                     '    $z = $x + $y;' . "\n" .
                     '' . "\n" .
                     '    return $z;' . "\n" .
@@ -199,7 +199,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                     ' */' . "\n" .
                     'public function nameOfMethod($x, $y)' . "\n" .
                     '{' . "\n" .
-                    '    // Add $x and $y and then return' . "\n" .
+                    '    // Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return' . "\n" .
                     '    $z = $x + $y;' . "\n" .
                     '' . "\n" .
                     '    return $z;' . "\n" .
