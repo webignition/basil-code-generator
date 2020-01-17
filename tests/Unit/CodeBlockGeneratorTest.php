@@ -76,7 +76,7 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
                     'PLACEHOLDER2' => '$y',
                 ],
                 'expectedLines' =>
-                    '// Add $x and $y and then return' . "\n" .
+                    '// Add {{ PLACEHOLDER1 }} and {{ PLACEHOLDER2 }} and then return' . "\n" .
                     '$z = $x + $y;' . "\n" .
                     '' . "\n" .
                     'return $z;'

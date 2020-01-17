@@ -54,12 +54,12 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
                 'variableIdentifiers' => [],
                 'expectedLine' => '// comment content',
             ],
-            'comment with placeholder' => [
+            'comment with placeholder is not replaced' => [
                 'line' => new Comment('comment content with {{ PLACEHOLDER }}'),
                 'variableIdentifiers' => [
                     'PLACEHOLDER' => 'replaced content'
                 ],
-                'expectedLine' => '// comment content with replaced content',
+                'expectedLine' => '// comment content with {{ PLACEHOLDER }}',
             ],
             'statement' => [
                 'line' => new Statement('$x'),
@@ -85,15 +85,15 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testCreateFromLineObjectThrowsUnresolvedPlaceholderException()
     {
         try {
-            $this->lineGenerator->createFromLineObject(new Comment('Content with {{ PLACEHOLDER }}'), []);
+            $this->lineGenerator->createFromLineObject(new Statement('Content with {{ PLACEHOLDER }}'), []);
         } catch (UnresolvedPlaceholderException $unresolvedPlaceholderException) {
             $this->assertSame(
-                'Unresolved placeholder "PLACEHOLDER" in content "// Content with {{ PLACEHOLDER }}"',
+                'Unresolved placeholder "PLACEHOLDER" in content "Content with {{ PLACEHOLDER }};"',
                 $unresolvedPlaceholderException->getMessage()
             );
 
             $this->assertSame('PLACEHOLDER', $unresolvedPlaceholderException->getPlaceholder());
-            $this->assertSame('// Content with {{ PLACEHOLDER }}', $unresolvedPlaceholderException->getContent());
+            $this->assertSame('Content with {{ PLACEHOLDER }};', $unresolvedPlaceholderException->getContent());
         }
     }
 }

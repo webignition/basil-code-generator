@@ -37,6 +37,10 @@ class LineGenerator
     {
         $lineString = $this->createLine($line);
 
+        if ($line instanceof Comment) {
+            return $lineString;
+        }
+
         return $this->variablePlaceholderResolver->resolve($lineString, $variableIdentifiers);
     }
 
