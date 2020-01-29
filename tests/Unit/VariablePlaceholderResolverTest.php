@@ -57,6 +57,16 @@ class VariablePlaceholderResolverTest extends \PHPUnit\Framework\TestCase
                 ],
                 'expectedResolvedContent' => '$this->method($argument)',
             ],
+            'contains parent > child descendant identifier' => [
+                'content' => 'method(\'$"{{ $".parent" }} .child"\')',
+                'variableIdentifiers' => [],
+                'expectedResolvedContent' => 'method(\'$"{{ $".parent" }} .child"\')',
+            ],
+            'contains grandparent > parent > child descendant identifier' => [
+                'content' => 'method(\'$"{{ $"{{ $".grandparent" }} .parent" }} .child"\')',
+                'variableIdentifiers' => [],
+                'expectedResolvedContent' => 'method(\'$"{{ $"{{ $".grandparent" }} .parent" }} .child"\')',
+            ],
         ];
     }
 
