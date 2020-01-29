@@ -29,7 +29,7 @@ class VariablePlaceholderResolver
         $resolvedContent = (string) str_replace($search, $replace, $content);
 
         $placeholderMatches = [];
-        if (preg_match('/{{ [^{]+ }}/', $resolvedContent, $placeholderMatches)) {
+        if (preg_match('/{{ [^${]+ }}/', $resolvedContent, $placeholderMatches)) {
             $unresolvedPlaceholder = trim($placeholderMatches[0], '{} ');
 
             throw new UnresolvedPlaceholderException($unresolvedPlaceholder, $content);
