@@ -65,7 +65,7 @@ class LineGenerator
         }
 
         if ($line instanceof ObjectMethodInvocationInterface) {
-            return $this->objectMethodGenerator->createFromObjectMethodInvocation($line);
+            return $this->objectMethodGenerator->createFromObjectMethodInvocation($line) . ';';
         }
 
         return '';

@@ -84,7 +84,7 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
             'object method invocation, no arguments' => [
                 'line' => new ObjectMethodInvocation('object', 'methodName'),
                 'variableIdentifiers' => [],
-                'expectedLine' => 'object->methodName()',
+                'expectedLine' => 'object->methodName();',
             ],
             'object method invocation, inline arguments' => [
                 'line' => new ObjectMethodInvocation(
@@ -96,7 +96,7 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
                     ]
                 ),
                 'variableIdentifiers' => [],
-                'expectedLine' => "object->methodName(1, \'single-quoted value\')",
+                'expectedLine' => "object->methodName(1, \'single-quoted value\');",
             ],
             'object method invocation, stacked arguments' => [
                 'line' => new ObjectMethodInvocation(
@@ -112,7 +112,7 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
                 'expectedLine' => "object->methodName(\n" .
                     "    1,\n" .
                     "    \'single-quoted value\'\n" .
-                    ")",
+                    ");",
             ],
         ];
     }
