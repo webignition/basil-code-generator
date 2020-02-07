@@ -9,6 +9,7 @@ use webignition\BasilCompilationSource\Block\CodeBlock;
 use webignition\BasilCompilationSource\Block\DocBlock;
 use webignition\BasilCompilationSource\Line\Comment;
 use webignition\BasilCompilationSource\Line\EmptyLine;
+use webignition\BasilCompilationSource\Line\MethodInvocation\ObjectMethodInvocation;
 use webignition\BasilCompilationSource\Line\Statement;
 use webignition\BasilCompilationSource\MethodDefinition\MethodDefinition;
 use webignition\BasilCompilationSource\MethodDefinition\MethodDefinitionInterface;
@@ -203,6 +204,29 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                     '    $z = $x + $y;' . "\n" .
                     '' . "\n" .
                     '    return $z;' . "\n" .
+                    '}'
+            ],
+            'public, no arguments, has method invocation line' => [
+                'methodDefinition' => new MethodDefinition(
+                    'nameOfMethod',
+                    new CodeBlock([
+                        new ObjectMethodInvocation(
+                            '{{ OBJECT_PLACEHOLDER }}',
+                            'innerMethodName',
+                            [
+                                '1',
+                            ]
+                        )
+                    ]),
+                    []
+                ),
+                'variableIdentifiers' => [
+                    'OBJECT_PLACEHOLDER' => '$object',
+                ],
+                'expectedCode' =>
+                    'public function nameOfMethod()' . "\n" .
+                    '{' . "\n" .
+                    '    $object->innerMethodName(1)' . "\n" .
                     '}'
             ],
         ];
