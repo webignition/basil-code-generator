@@ -10,6 +10,8 @@ use webignition\BasilCompilationSource\Line\ClassDependency;
 use webignition\BasilCompilationSource\Line\Comment;
 use webignition\BasilCompilationSource\Line\EmptyLine;
 use webignition\BasilCompilationSource\Line\LineInterface;
+use webignition\BasilCompilationSource\Line\MethodInvocation\ArgumentFormats;
+use webignition\BasilCompilationSource\Line\MethodInvocation\ObjectMethodInvocation;
 use webignition\BasilCompilationSource\Line\Statement;
 
 class LineGeneratorTest extends \PHPUnit\Framework\TestCase
@@ -78,6 +80,39 @@ class LineGeneratorTest extends \PHPUnit\Framework\TestCase
                 'line' => new ClassDependency(ClassDependency::class),
                 'variableIdentifiers' => [],
                 'expectedLine' => 'use webignition\BasilCompilationSource\Line\ClassDependency;',
+            ],
+            'object method invocation, no arguments' => [
+                'line' => new ObjectMethodInvocation('object', 'methodName'),
+                'variableIdentifiers' => [],
+                'expectedLine' => 'object->methodName()',
+            ],
+            'object method invocation, inline arguments' => [
+                'line' => new ObjectMethodInvocation(
+                    'object',
+                    'methodName',
+                    [
+                        '1',
+                        "\'single-quoted value\'",
+                    ]
+                ),
+                'variableIdentifiers' => [],
+                'expectedLine' => "object->methodName(1, \'single-quoted value\')",
+            ],
+            'object method invocation, stacked arguments' => [
+                'line' => new ObjectMethodInvocation(
+                    'object',
+                    'methodName',
+                    [
+                        '1',
+                        "\'single-quoted value\'",
+                    ],
+                    ArgumentFormats::STACKED
+                ),
+                'variableIdentifiers' => [],
+                'expectedLine' => "object->methodName(\n" .
+                    "    1,\n" .
+                    "    \'single-quoted value\'\n" .
+                    ")",
             ],
         ];
     }

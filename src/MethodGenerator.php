@@ -52,7 +52,7 @@ EOD;
         $signature = $this->createSignature($methodDefinition);
 
         $lines = $this->codeBlockGenerator->createFromBlock($methodDefinition, $variableIdentifiers);
-        $lines = $this->indenter->indent($lines);
+        $lines = $this->indenter->indentLinesInString($lines);
         $lines = rtrim($lines, "\n");
 
         $content = sprintf($methodTemplate, $signature, $lines);
