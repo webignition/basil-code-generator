@@ -226,7 +226,7 @@ class MethodGeneratorTest extends \PHPUnit\Framework\TestCase
                 'expectedCode' =>
                     'public function nameOfMethod()' . "\n" .
                     '{' . "\n" .
-                    '    $object->innerMethodName(1)' . "\n" .
+                    '    $object->innerMethodName(1);' . "\n" .
                     '}'
             ],
         ];

@@ -96,7 +96,7 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
                     'OBJECT_PLACEHOLDER' => '$object',
                 ],
                 'expectedLines' =>
-                    '$object->objectMethodName(1)',
+                    '$object->objectMethodName(1);',
             ],
         ];
     }
