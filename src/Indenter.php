@@ -8,11 +8,22 @@ class Indenter
 {
     private const LINE_DELIMITER = "\n";
 
-    public function indent(string $content, int $spaceCount = 4): string
+    public function indentLinesInString(string $content, int $spaceCount = 4): string
     {
         $lines = explode(self::LINE_DELIMITER, $content);
 
-        $indentedLines = array_map(
+        return implode(self::LINE_DELIMITER, $this->indentLinesInArray($lines, $spaceCount));
+    }
+
+    /**
+     * @param string[] $lines
+     * @param int $spaceCount
+     *
+     * @return string[]
+     */
+    public function indentLinesInArray(array $lines, int $spaceCount = 4): array
+    {
+        return array_map(
             function ($line) use ($spaceCount) {
                 if ('' === $line) {
                     return '';
@@ -24,7 +35,5 @@ class Indenter
             },
             $lines
         );
-
-        return implode(self::LINE_DELIMITER, $indentedLines);
     }
 }
