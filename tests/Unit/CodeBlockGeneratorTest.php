@@ -12,6 +12,7 @@ use webignition\BasilCompilationSource\Block\CodeBlockInterface;
 use webignition\BasilCompilationSource\Line\ClassDependency;
 use webignition\BasilCompilationSource\Line\Comment;
 use webignition\BasilCompilationSource\Line\EmptyLine;
+use webignition\BasilCompilationSource\Line\MethodInvocation\ObjectMethodInvocation;
 use webignition\BasilCompilationSource\Line\Statement;
 use webignition\BasilCompilationSource\Metadata\Metadata;
 
@@ -80,6 +81,22 @@ class CodeBlockGeneratorTest extends \PHPUnit\Framework\TestCase
                     '$z = $x + $y;' . "\n" .
                     '' . "\n" .
                     'return $z;'
+            ],
+            'has object method invocation' => [
+                'block' => new CodeBlock([
+                    new ObjectMethodInvocation(
+                        '{{ OBJECT_PLACEHOLDER }}',
+                        'objectMethodName',
+                        [
+                            '1',
+                        ]
+                    ),
+                ]),
+                'variableIdentifiers' => [
+                    'OBJECT_PLACEHOLDER' => '$object',
+                ],
+                'expectedLines' =>
+                    '$object->objectMethodName(1)',
             ],
         ];
     }

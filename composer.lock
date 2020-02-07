@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac7d18241f6fda11852b37f80d92cdbb",
+    "content-hash": "745b1b5fa237808c4bf3a47b6f29ffdb",
     "packages": [
         {
             "name": "webignition/php-basil-compilation-source",
-            "version": "0.66",
+            "version": "0.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webignition/php-basil-compilation-source.git",
-                "reference": "c27ebd835ee30a345569216ee1e74bfa4f4eb6ea"
+                "reference": "deeae75b23397f02412ad849e74b9ac18a091841"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/c27ebd835ee30a345569216ee1e74bfa4f4eb6ea",
-                "reference": "c27ebd835ee30a345569216ee1e74bfa4f4eb6ea",
+                "url": "https://api.github.com/repos/webignition/php-basil-compilation-source/zipball/deeae75b23397f02412ad849e74b9ac18a091841",
+                "reference": "deeae75b23397f02412ad849e74b9ac18a091841",
                 "shasum": ""
             },
             "require": {
@@ -46,7 +46,7 @@
                 }
             ],
             "homepage": "https://github.com/webignition/php-basil-compilation-source",
-            "time": "2020-02-07T11:36:41+00:00"
+            "time": "2020-02-07T12:37:56+00:00"
         }
     ],
     "packages-dev": [
